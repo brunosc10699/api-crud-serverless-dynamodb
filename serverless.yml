@@ -1,0 +1,104 @@
+service: api-crud-serverless-dynamodb
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+  lambdaHashingVersion: 20201221
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.holidaysTableName}
+
+custom:
+  holidaysTableName: holidays-table-${self:provider.stage}
+
+plugins:
+  - serverless-iam-roles-per-function
+
+functions:
+  createHoliday:
+    handler: api.createHoliday
+    name: create-holiday
+    memorySize: 128 #em Megabytes
+    timeout: 5 #tempo em segundos
+    events:
+      - http:
+          path: holiday
+          method: POST
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:PutItem"
+        Resource: !GetAtt HolidaysTable.Arn
+  getHoliday:
+    handler: api.getHoliday
+    name: get-holiday
+    memorySize: 128 #em Megabytes
+    timeout: 5 #tempo em segundos
+    events:
+      - http:
+          path: holiday/{id}
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:GetItem"
+        Resource: !GetAtt HolidaysTable.Arn
+  updateHoliday:
+    handler: api.updateHoliday
+    name: update-holiday
+    memorySize: 128 #em Megabytes
+    timeout: 5 #tempo em segundos
+    events:
+      - http:
+          path: holiday/{id}
+          method: PUT
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:UpdateItem"
+        Resource: !GetAtt HolidaysTable.Arn
+  deleteHoliday:
+    handler: api.deleteHoliday
+    name: delete-Holiday
+    memorySize: 128 #em Megabytes
+    timeout: 5 #tempo em segundos
+    events:
+      - http:
+          path: holiday/{id}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:DeleteItem"
+        Resource: !GetAtt HolidaysTable.Arn
+  getAllHolidays:
+    handler: api.getAllHolidays
+    name: get-all-holidays
+    memorySize: 128 #em Megabytes
+    timeout: 5 #tempo em segundos
+    events:
+      - http:
+          path: holidays
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:Scan"
+        Resource: !GetAtt HolidaysTable.Arn
+
+resources:
+  Resources:
+    HolidaysTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.holidaysTableName}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
