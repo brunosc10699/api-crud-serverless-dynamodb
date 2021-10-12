@@ -1,0 +1,19 @@
+{
+  "name": "api-crud-serverless-dynamodb",
+  "version": "1.0.0",
+  "description": "First CRUD API with Serverless Framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunosc10699/api-crud-serverless-dynamodb.git"
+  },
+  "author": "Leonardo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brunosc10699/api-crud-serverless-dynamodb/issues"
+  },
+  "homepage": "https://github.com/brunosc10699/api-crud-serverless-dynamodb#readme"
+}
