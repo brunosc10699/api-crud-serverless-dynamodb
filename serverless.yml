@@ -60,7 +60,7 @@ functions:
         Resource: !GetAtt HolidaysTable.Arn
   deleteHoliday:
     handler: api.deleteHoliday
-    name: delete-Holiday
+    name: delete-holiday
     memorySize: 128 #em Megabytes
     timeout: 5 #tempo em segundos
     events:
